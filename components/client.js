@@ -125,6 +125,6 @@ class _ClientImpl {
  *   A JS object that provides an API to interact with the
  *   game by dispatching moves and events.
  */
-export function RawClient(store) {
-  return new _ClientImpl(store);
+export function RawClient(store, playerId) {
+  return new _ClientImpl(store, playerId);
 }
