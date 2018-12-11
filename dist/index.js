@@ -1261,13 +1261,13 @@ var createMoveDispatchers = createDispatchers.bind(null, 'makeMove');
  */
 
 var _ClientImpl = function () {
-  function _ClientImpl(store) {
+  function _ClientImpl(store, playerId) {
     var _this = this;
 
     _classCallCheck$7(this, _ClientImpl);
 
     this.store = store;
-    this.playerID = this.store.playerId;
+    this.playerID = playerId;
 
     this.reset = function () {
       _this.store.dispatch(reset());
@@ -1427,7 +1427,7 @@ function Client(_ref) {
       };
 
       _this.proxy = proxy;
-      _this.client = RawClient(proxy);
+      _this.client = RawClient(proxy, props.playerID);
 
       _this.gameID = props.gameID;
       _this.playerID = props.playerID;
