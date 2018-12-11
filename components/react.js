@@ -99,9 +99,6 @@ export function Client({
     };
 
     updatePlayerID = playerID => {
-      this.client.updatePlayerID(playerID);
-      this.playerID = playerID;
-      this.forceUpdate();
     };
 
     updateCredentials = credentials => {
@@ -119,6 +116,7 @@ export function Client({
     };
 
     render() {
+      console.log('RENDERING WITH PLAYER ID:', this.playerID)
       let _board = null;
       let _debug = null;
 
@@ -138,7 +136,7 @@ export function Client({
           moves: this.client.moves,
           events: this.client.events,
           gameID: this.gameID,
-          playerID: this.playerId,
+          playerID: this.playerID,
           reset: this.client.reset,
           undo: this.client.undo,
           redo: this.client.redo,
@@ -155,7 +153,7 @@ export function Client({
           moves: this.client.moves,
           events: this.client.events,
           gameID: this.gameID,
-          playerID: this.playerId,
+          playerID: this.playerID,
           step: this.client.step,
           reset: this.client.reset,
           undo: this.client.undo,

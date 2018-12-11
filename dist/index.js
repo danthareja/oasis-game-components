@@ -1410,11 +1410,7 @@ function Client(_ref) {
         _this.forceUpdate();
       };
 
-      _this.updatePlayerID = function (playerID) {
-        _this.client.updatePlayerID(playerID);
-        _this.playerID = playerID;
-        _this.forceUpdate();
-      };
+      _this.updatePlayerID = function (playerID) {};
 
       _this.updateCredentials = function (credentials) {
         _this.client.updateCredentials(credentials);
@@ -1459,6 +1455,7 @@ function Client(_ref) {
     }, {
       key: 'render',
       value: function render() {
+        console.log('RENDERING WITH PLAYER ID:', this.playerID);
         var _board = null;
         var _debug = null;
 
@@ -1479,7 +1476,7 @@ function Client(_ref) {
             moves: this.client.moves,
             events: this.client.events,
             gameID: this.gameID,
-            playerID: this.playerId,
+            playerID: this.playerID,
             reset: this.client.reset,
             undo: this.client.undo,
             redo: this.client.redo
@@ -1496,7 +1493,7 @@ function Client(_ref) {
             moves: this.client.moves,
             events: this.client.events,
             gameID: this.gameID,
-            playerID: this.playerId,
+            playerID: this.playerID,
             step: this.client.step,
             reset: this.client.reset,
             undo: this.client.undo,
