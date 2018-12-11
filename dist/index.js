@@ -1479,7 +1479,7 @@ function Client(_ref) {
             moves: this.client.moves,
             events: this.client.events,
             gameID: this.gameID,
-            playerID: this.playerID,
+            playerID: this.playerId,
             reset: this.client.reset,
             undo: this.client.undo,
             redo: this.client.redo
@@ -1496,7 +1496,7 @@ function Client(_ref) {
             moves: this.client.moves,
             events: this.client.events,
             gameID: this.gameID,
-            playerID: this.playerID,
+            playerID: this.playerId,
             step: this.client.step,
             reset: this.client.reset,
             undo: this.client.undo,
