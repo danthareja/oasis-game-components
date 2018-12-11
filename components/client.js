@@ -58,9 +58,9 @@ export const createMoveDispatchers = createDispatchers.bind(null, 'makeMove');
  * Implementation of Client (see below).
  */
 class _ClientImpl {
-  constructor(store) {
+  constructor(store, playerId) {
     this.store = store;
-    this.playerID = this.store.playerId;
+    this.playerID = playerId;
 
     this.reset = () => {
       this.store.dispatch(ActionCreators.reset());

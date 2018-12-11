@@ -72,7 +72,7 @@ export function Client({
       super(props);
 
       this.proxy = proxy;
-      this.client = RawClient(proxy);
+      this.client = RawClient(proxy, props.playerID);
 
       this.gameID = props.gameID;
       this.playerID = props.playerID;
