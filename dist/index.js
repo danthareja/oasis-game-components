@@ -1427,10 +1427,10 @@ function Client(_ref) {
       };
 
       _this.proxy = proxy;
-      _this.client = RawClient(proxy, props.playerID);
+      _this.client = RawClient(proxy, playerId);
 
       _this.gameID = props.gameID;
-      _this.playerID = props.playerID;
+      _this.playerID = playerId;
 
       _this.client.subscribe(function () {
         return _this.forceUpdate();
