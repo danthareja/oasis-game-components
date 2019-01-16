@@ -116,7 +116,6 @@ export function Client({
     };
 
     render() {
-      console.log('RENDERING WITH PLAYER ID:', this.playerID)
       let _board = null;
       let _debug = null;
 

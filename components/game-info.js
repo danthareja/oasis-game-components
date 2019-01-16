@@ -14,7 +14,6 @@ export default class GameInfo extends React.Component {
   isMyTurn () {
     let ctx = this.props.ctx
     let playerId = this.props.playerID
-    console.log('IN MY TURN, ctx:', ctx, 'playerId:', playerId)
     let myTurn = playerId && (
       ctx.current_player === playerId ||
       (ctx.active_players && ctx.active_players.indexOf(playerId) !== -1)
