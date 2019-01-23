@@ -65,14 +65,12 @@ export default class GameWrapper extends React.Component {
         )
       }
       if (!this.state.started) {
-        if (!this.state.started) {
-          return (
-            <div className="flex flex-column w-100 center mt7 items-center">
-              <h3>Waiting for other players...</h3>
-              {loader}
-            </div>
-          )
-        }
+        return (
+          <div className="flex flex-column w-100 center mt7 items-center">
+            <h3>Waiting for other players...</h3>
+            {loader}
+          </div>
+        )
       }
     }
     return  React.cloneElement(this.props.children, {...this.state})

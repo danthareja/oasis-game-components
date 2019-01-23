@@ -123,6 +123,7 @@ var GameWrapper = function (_React$Component) {
   }, {
     key: 'render',
     value: function render() {
+      console.log('RENDERING WITH STATE:', this.state);
       if (!this.state.proxy) {
         return React.createElement(Loading, null);
       }
@@ -153,18 +154,16 @@ var GameWrapper = function (_React$Component) {
           );
         }
         if (!this.state.started) {
-          if (!this.state.started) {
-            return React.createElement(
-              'div',
-              { className: 'flex flex-column w-100 center mt7 items-center' },
-              React.createElement(
-                'h3',
-                null,
-                'Waiting for other players...'
-              ),
-              loader
-            );
-          }
+          return React.createElement(
+            'div',
+            { className: 'flex flex-column w-100 center mt7 items-center' },
+            React.createElement(
+              'h3',
+              null,
+              'Waiting for other players...'
+            ),
+            loader
+          );
         }
       }
       return React.cloneElement(this.props.children, _extends({}, this.state));
