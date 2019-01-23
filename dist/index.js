@@ -66,11 +66,17 @@ var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = [
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+var _templateObject$1 = _taggedTemplateLiteral$1(['\n    display: block;\n    margin: 0 auto;\n    border-color: red;\n'], ['\n    display: block;\n    margin: 0 auto;\n    border-color: red;\n']);
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+function _taggedTemplateLiteral$1(strings, raw) { return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
+
+var override$1 = reactEmotion.css(_templateObject$1);
 
 var GameWrapper = function (_React$Component) {
   _inherits(GameWrapper, _React$Component);
@@ -82,22 +88,86 @@ var GameWrapper = function (_React$Component) {
 
     _this.state = {
       proxy: null,
-      game: null
+      game: null,
+      ready: false,
+      started: false,
+      readySent: false
     };
     props.proxyPromise.then(function (_ref) {
       var _ref2 = _slicedToArray(_ref, 2),
           proxy = _ref2[0],
           game = _ref2[1];
 
-      _this.setState({ proxy: proxy, game: game });
+      game.once('started', function () {
+        _this.setState(_extends({}, _this.state, {
+          started: true
+        }));
+      });
+      _this.setState({
+        proxy: proxy,
+        game: game,
+        ready: game.isReady,
+        started: game.isStarted
+      });
     });
     return _this;
   }
 
   _createClass(GameWrapper, [{
+    key: 'sendReady',
+    value: async function sendReady() {
+      this.setState(_extends({}, this.state, { readySent: true }));
+      await this.state.game.sendReady();
+      this.setState(_extends({}, this.state, { readySent: false, ready: this.state.game.isReady }));
+    }
+  }, {
     key: 'render',
     value: function render() {
-      return this.state.proxy ? React.cloneElement(this.props.children, _extends({}, this.state)) : React.createElement(Loading, null);
+      if (!this.state.proxy) {
+        return React.createElement(Loading, null);
+      }
+      if (!this.state.ready || !this.state.started) {
+        var loader = React.createElement(reactSpinners.ClipLoader, {
+          className: override$1,
+          sizeUnit: 'px',
+          size: 30,
+          height: 50,
+          color: 'dark-green',
+          loading: true
+        });
+        if (!this.state.ready) {
+          var button = React.createElement(
+            'a',
+            { className: 'f6 link dim ba ph3 pv2 mb2 dib dark-green', onClick: this.sendReady.bind(this) },
+            'Ready'
+          );
+          return React.createElement(
+            'div',
+            { className: 'flex flex-column w-100 center mt7 items-center' },
+            React.createElement(
+              'h3',
+              null,
+              'You\'re registered to play. Are you ready to start?'
+            ),
+            this.state.readySent ? loader : button
+          );
+        }
+        if (!this.state.started) {
+          if (!this.state.started) {
+            return React.createElement(
+              'div',
+              { className: 'flex flex-column w-100 center mt7 items-center' },
+              React.createElement(
+                'h3',
+                null,
+                'Waiting for other players...'
+              ),
+              loader
+            );
+          }
+        }
+      }
+      return React.cloneElement(this.props.children, _extends({}, this.state));
     }
   }]);
 
@@ -106,7 +176,7 @@ var GameWrapper = function (_React$Component) {
 
 var _createClass$1 = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _templateObject$1 = _taggedTemplateLiteral$1(['\n    display: inline;\n    margin: 20 auto;\n    border-color: red;\n'], ['\n    display: inline;\n    margin: 20 auto;\n    border-color: red;\n']);
+var _templateObject$2 = _taggedTemplateLiteral$2(['\n    display: inline;\n    margin: 20 auto;\n    border-color: red;\n'], ['\n    display: inline;\n    margin: 20 auto;\n    border-color: red;\n']);
 
 function _classCallCheck$1(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -114,9 +184,9 @@ function _possibleConstructorReturn$1(self, call) { if (!self) { throw new Refer
 
 function _inherits$1(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-function _taggedTemplateLiteral$1(strings, raw) { return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
+function _taggedTemplateLiteral$2(strings, raw) { return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
 
-var override$1 = reactEmotion.css(_templateObject$1);
+var override$2 = reactEmotion.css(_templateObject$2);
 var styles = ['f4', 'pv3', 'mh-75', 'flex', 'flex-column', 'items-center'];
 
 var GameInfo = function (_React$Component) {
@@ -133,7 +203,6 @@ var GameInfo = function (_React$Component) {
     value: function isMyTurn() {
       var ctx = this.props.ctx;
       var playerId = this.props.playerID;
-      console.log('IN MY TURN, ctx:', ctx, 'playerId:', playerId);
       var myTurn = playerId && (ctx.current_player === playerId || ctx.active_players && ctx.active_players.indexOf(playerId) !== -1);
       return myTurn;
     }
@@ -170,7 +239,7 @@ var GameInfo = function (_React$Component) {
           text
         ),
         React.createElement(reactSpinners.PulseLoader, {
-          className: override$1,
+          className: override$2,
           sizeUnit: 'px',
           size: 10,
           color: '#357EDD',
@@ -422,109 +491,6 @@ KeyboardShortcut.propTypes = {
 /**
  * Controls that are triggered by keyboard shortcuts.
  */
-var Controls = function Controls(props) {
-  var ai = null;
-
-  if (props.step) {
-    ai = [React.createElement(
-      KeyboardShortcut,
-      { key: '4', value: '4', onPress: props.step },
-      'step'
-    ), React.createElement(
-      KeyboardShortcut,
-      { key: '5', value: '5', onPress: props.simulate },
-      'simulate'
-    )];
-  }
-
-  var style = null;
-  var className = 'controls';
-  if (props.dockTop) {
-    className += ' docktop';
-  }
-  if (props.help) {
-    className += ' help';
-  }
-
-  var display = props.help && !props.dockTop ? 'block' : 'none';
-
-  return React.createElement(
-    'section',
-    { id: 'debug-controls', style: style, className: className },
-    React.createElement(
-      KeyboardShortcut,
-      { value: '1', onPress: props.reset },
-      'reset'
-    ),
-    React.createElement(
-      KeyboardShortcut,
-      { value: '2', onPress: props.save },
-      'save'
-    ),
-    React.createElement(
-      KeyboardShortcut,
-      { value: '3', onPress: props.restore },
-      'restore'
-    ),
-    ai,
-    props.dockTop || React.createElement(
-      KeyboardShortcut,
-      { value: '?', onPress: props.toggleHelp },
-      'show more'
-    ),
-    React.createElement(
-      'div',
-      { className: 'key', style: { display: display } },
-      React.createElement(
-        'div',
-        { className: 'key-box' },
-        'd'
-      ),
-      ' show/hide this pane'
-    ),
-    React.createElement(
-      'div',
-      { className: 'key', style: { display: display } },
-      React.createElement(
-        'div',
-        { className: 'key-box' },
-        'l'
-      ),
-      ' show/hide log'
-    ),
-    React.createElement(
-      'div',
-      { className: 'key', style: { display: display } },
-      React.createElement(
-        'div',
-        { className: 'key-box' },
-        'i'
-      ),
-      ' show/hide game info tab'
-    ),
-    React.createElement(
-      'div',
-      { className: 'key', style: { display: display } },
-      React.createElement(
-        'div',
-        { className: 'key-box' },
-        't'
-      ),
-      ' dock controls'
-    )
-  );
-};
-
-Controls.propTypes = {
-  help: PropTypes.bool,
-  toggleHelp: PropTypes.func,
-  step: PropTypes.func,
-  simulate: PropTypes.func,
-  reset: PropTypes.func,
-  save: PropTypes.func,
-  restore: PropTypes.func,
-  dockTop: PropTypes.bool
-};
 
 var _createClass$5 = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -994,16 +960,6 @@ var Debug = function (_React$Component) {
               isConnected: this.props.gamestate.isConnected,
               isMultiplayer: this.props.isMultiplayer
             }),
-            React.createElement(Controls, {
-              dockTop: this.state.dockControls,
-              help: this.state.help,
-              toggleHelp: this.toggleHelp,
-              step: this.props.step,
-              simulate: this.simulate,
-              reset: this.props.reset,
-              save: this.saveState,
-              restore: this.restoreState
-            }),
             React.createElement(
               'h3',
               null,
@@ -1023,16 +979,6 @@ var Debug = function (_React$Component) {
               'section',
               null,
               moves
-            ),
-            React.createElement(
-              'h3',
-              null,
-              'Events'
-            ),
-            React.createElement(
-              'section',
-              null,
-              events
             ),
             React.createElement(
               'section',
@@ -1455,7 +1401,6 @@ function Client(_ref) {
     }, {
       key: 'render',
       value: function render() {
-        console.log('RENDERING WITH PLAYER ID:', this.playerID);
         var _board = null;
         var _debug = null;
 

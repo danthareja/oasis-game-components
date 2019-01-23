@@ -221,17 +221,6 @@ export class Debug extends React.Component {
                 />
               )}
 
-              <Controls
-                dockTop={this.state.dockControls}
-                help={this.state.help}
-                toggleHelp={this.toggleHelp}
-                step={this.props.step}
-                simulate={this.simulate}
-                reset={this.props.reset}
-                save={this.saveState}
-                restore={this.restoreState}
-              />
-
               <h3>Players</h3>
               <PlayerInfo
                 ctx={this.props.gamestate.ctx}
@@ -242,10 +231,6 @@ export class Debug extends React.Component {
               <h3>Moves</h3>
 
               <section>{moves}</section>
-
-              <h3>Events</h3>
-
-              <section>{events}</section>
 
               <section>
                 <pre className="json">
