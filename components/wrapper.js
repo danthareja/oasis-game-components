@@ -59,7 +59,7 @@ export default class GameWrapper extends React.Component {
         let button = <a className='f6 link dim ba ph3 pv2 mb2 dib dark-green' onClick={this.sendReady.bind(this)}>Ready</a>
         return (
           <div className="flex flex-column w-100 center mt7 items-center">
-            <h3>You're registered to play. Are you ready to start?</h3>
+            <h3>Are you ready to play?</h3>
             {(this.state.readySent) ? loader : button}
           </div>
         )

@@ -16,7 +16,7 @@ export default class GameInfo extends React.Component {
     let playerId = this.props.playerID
     let myTurn = playerId && (
       ctx.current_player === playerId ||
-      (ctx.active_players && ctx.active_players.indexOf(playerId) !== -1)
+      (ctx.action_players && ctx.action_players.indexOf(playerId) !== -1)
     )
     return myTurn
   }
@@ -29,11 +29,12 @@ export default class GameInfo extends React.Component {
       return <div className={styles.join(' ')}>It's your turn. Make a move!</div>
     }
     let ctx = this.props.ctx
-    let activePlayers = ctx.active_players || ctx.current_player
+    let activePlayers = (ctx.action_players && ctx.action_players.length) || ctx.current_player
+    let playerText = (typeof activePlayers === 'object' && activePlayers.length) ? 'Players' : 'Player'
     if (activePlayers instanceof Array) {
-      var text = `Waiting for Players ${activePlayers.join()} to make moves...`
+      var text = `Waiting for ${playerText} ${activePlayers.join()} to make moves...`
     } else {
-      text = `Waiting for Player ${activePlayers} to make a move...`
+      text = `Waiting for ${playerText} ${activePlayers} to make a move...`
     }
     return (
       <div className={[...styles, 'blue'].join(' ')}>

@@ -123,7 +123,6 @@ var GameWrapper = function (_React$Component) {
   }, {
     key: 'render',
     value: function render() {
-      console.log('RENDERING WITH STATE:', this.state);
       if (!this.state.proxy) {
         return React.createElement(Loading, null);
       }
@@ -148,7 +147,7 @@ var GameWrapper = function (_React$Component) {
             React.createElement(
               'h3',
               null,
-              'You\'re registered to play. Are you ready to start?'
+              'Are you ready to play?'
             ),
             this.state.readySent ? loader : button
           );
@@ -172,6 +171,8 @@ var GameWrapper = function (_React$Component) {
 
   return GameWrapper;
 }(React.Component);
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 var _createClass$1 = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -202,7 +203,7 @@ var GameInfo = function (_React$Component) {
     value: function isMyTurn() {
       var ctx = this.props.ctx;
       var playerId = this.props.playerID;
-      var myTurn = playerId && (ctx.current_player === playerId || ctx.active_players && ctx.active_players.indexOf(playerId) !== -1);
+      var myTurn = playerId && (ctx.current_player === playerId || ctx.action_players && ctx.action_players.indexOf(playerId) !== -1);
       return myTurn;
     }
   }, {
@@ -223,11 +224,12 @@ var GameInfo = function (_React$Component) {
         );
       }
       var ctx = this.props.ctx;
-      var activePlayers = ctx.active_players || ctx.current_player;
+      var activePlayers = ctx.action_players && ctx.action_players.length || ctx.current_player;
+      var playerText = (typeof activePlayers === 'undefined' ? 'undefined' : _typeof(activePlayers)) === 'object' && activePlayers.length ? 'Players' : 'Player';
       if (activePlayers instanceof Array) {
-        var text = 'Waiting for Players ' + activePlayers.join() + ' to make moves...';
+        var text = 'Waiting for ' + playerText + ' ' + activePlayers.join() + ' to make moves...';
       } else {
-        text = 'Waiting for Player ' + activePlayers + ' to make a move...';
+        text = 'Waiting for ' + playerText + ' ' + activePlayers + ' to make a move...';
       }
       return React.createElement(
         'div',
@@ -368,7 +370,7 @@ GameInfo$2.propTypes = {
 
 __$styleInject("/*\n * Copyright 2017 The boardgame.io Authors\n *\n * Use of this source code is governed by a MIT-style\n * license that can be found in the LICENSE file or at\n * https://opensource.org/licenses/MIT.\n */\n\n.debug-ui {\n  text-align: left;\n  overflow-x: hidden;\n  overflow-y: scroll;\n  background: #fefefe;\n  border-left: 1px solid #ddd;\n  box-shadow: -1px 0 10px #aaa;\n  position: absolute;\n  width: 300px;\n  right: 0;\n  top: 0;\n  height: 100%;\n  font-family: monospace;\n  font-size: 14px;\n}\n\n#debug-controls.docktop {\n  position: fixed;\n  display: flex;\n  flex-direction: row;\n  justify-content: space-evenly;\n  align-items: center;\n  padding-left: 10px;\n  padding-right: 10px;\n  min-width: 500px;\n  top: 0;\n  right: 300px;\n  height: 50px;\n  background: #fff;\n  box-shadow: -3px 3px 3px #ccc;\n}\n\n@media only screen and (max-device-width: 750px) {\n  .debug-ui {\n    display: none;\n  }\n}\n\n.debug-ui .gameinfo {\n  background: #ddd;\n  position: fixed;\n  bottom: 0;\n  box-sizing: border-box;\n  width: 285px;\n  margin-left: -20px;\n  margin-bottom: 0;\n  padding: 10px;\n}\n\n.debug-ui .gameinfo-item div {\n  float: right;\n  text-align: right;\n}\n\n.debug-ui .ai-visualization {\n  position: fixed;\n  opacity: 100%;\n  right: 300px;\n  height: 100%;\n  width: 100%;\n  max-width: 3000px;\n  background: #fafafa;\n  border-right: 1px solid #ddd;\n}\n\n.debug-ui .pane {\n  float: left;\n  padding: 20px;\n  box-sizing: border-box;\n  min-width: 300px;\n  max-width: 400px;\n  opacity: 0.8;\n}\n\n.debug-ui section {\n  margin-bottom: 20px;\n}\n\n.debug-ui textarea {\n  resize: none;\n}\n\n.debug-ui .move {\n  cursor: pointer;\n  margin-bottom: 10px;\n  color: #666;\n}\n\n.debug-ui .move:hover {\n  color: #333;\n}\n\n.debug-ui .move.active {\n  color: #111;\n  font-weight: bold;\n}\n\n.debug-ui .move-error {\n  color: #a00;\n  font-weight: bold;\n}\n\n.debug-ui .arg-field {\n  outline: none;\n  font-family: monospace;\n}\n\n.debug-ui .key {\n  margin-bottom: 5px;\n}\n\n.debug-ui .key-box {\n  display: inline-block;\n  cursor: pointer;\n  min-width: 10px;\n  padding-left: 5px;\n  padding-right: 5px;\n  height: 20px;\n  line-height: 20px;\n  text-align: center;\n  border: 1px solid #ccc;\n  box-shadow: 1px 1px 1px #888;\n  background: #eee;\n  color: #444;\n}\n\n.debug-ui .key-box:hover {\n  background: #ddd;\n}\n\n.debug-ui .key.active .key-box {\n  background: #ddd;\n  border: 1px solid #999;\n  box-shadow: none;\n}\n\n.debug-ui .key-child {\n  display: inline-block;\n  height: 20px;\n  margin-left: 10px;\n}\n\n.debug-ui .menu {\n  display: flex;\n  flex-direction: row;\n  justify-content: center;\n}\n\n.debug-ui .menu .item {\n  cursor: pointer;\n  margin-top: -10px;\n  margin-bottom: 20px;\n  margin-right: 10px;\n  padding: 5px;\n  min-width: 50px;\n  text-align: center;\n}\n\n.debug-ui .menu .item.active {\n  font-weight: bold;\n  border-bottom: 3px solid #ccc;\n}\n\n.debug-ui .player-box {\n  display: flex;\n  flex-direction: row;\n}\n\n.debug-ui .player {\n  cursor: pointer;\n  text-align: center;\n  width: 30px;\n  height: 30px;\n  line-height: 30px;\n  background: #eee;\n  border: 3px solid #fff;\n  box-sizing: content-box;\n}\n\n.debug-ui .player.current {\n  background: #555;\n  color: #eee;\n  font-weight: bold;\n}\n\n.debug-ui .player.active {\n  border: 3px solid #ff7f50;\n}\n", {});
 
-var _typeof$1 = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+var _typeof$2 = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 var _createClass$4 = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -441,7 +443,7 @@ var KeyboardShortcut = function (_React$Component) {
     key: 'render',
     value: function render() {
       var child = this.props.children;
-      if (_typeof$1(this.props.children) === _typeof$1(this)) {
+      if (_typeof$2(this.props.children) === _typeof$2(this)) {
         child = React.cloneElement(this.props.children, {
           active: this.state.active,
           deactivate: this.deactivate,
@@ -1278,7 +1280,7 @@ function RawClient(store, playerId) {
   return new _ClientImpl(store, playerId);
 }
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+var _typeof$1 = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 var _extends$1 = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
@@ -1480,10 +1482,185 @@ function Client(_ref) {
   }, _temp;
 }
 
+var _extends$2 = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var _createClass$8 = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck$8(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn$7(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits$7(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var BALANCE_REFRESH_INTERVAL = 30000;
+
+function sendFundTransaction(metamask, from, to) {
+  return new Promise(function (resolve, reject) {
+    var value = metamask.toWei(0.3, "ether");
+    metamask.eth.sendTransaction({ from: from, to: to, value: value }, function (err) {
+      if (err) return reject(err);
+      return resolve();
+    });
+  });
+}
+
+function delay(ms) {
+  return new Promise(function (resolve) {
+    setTimeout(function () {
+      return resolve();
+    }, ms);
+  });
+}
+
+var WalletManager = function (_React$Component) {
+  _inherits$7(WalletManager, _React$Component);
+
+  function WalletManager(props) {
+    _classCallCheck$8(this, WalletManager);
+
+    var _this = _possibleConstructorReturn$7(this, (WalletManager.__proto__ || Object.getPrototypeOf(WalletManager)).call(this, props));
+
+    _this.web3c = props.web3c;
+    _this.metamask = props.metamask;
+    _this.address = _this.web3c.oasis.defaultAccount.address;
+    _this.state = {
+      balance: 0,
+      subscription: null,
+      error: null
+    };
+    return _this;
+  }
+
+  _createClass$8(WalletManager, [{
+    key: '_loadBalance',
+    value: async function _loadBalance() {
+      try {
+        var balance = await this.props.web3c.eth.getBalance(this.address);
+        this.setState(_extends$2({}, this.state, {
+          balance: balance
+        }));
+      } catch (err) {
+        this.setState(_extends$2({}, this.state, {
+          error: 'Could not get balance: ' + err
+        }));
+      }
+    }
+  }, {
+    key: '_startBalancePolling',
+    value: function _startBalancePolling() {
+      var _this2 = this;
+
+      var subscription = setInterval(async function () {
+        await _this2._loadBalance();
+      }, BALANCE_REFRESH_INTERVAL);
+      this.setState(_extends$2({}, this.state, {
+        subscription: subscription
+      }));
+    }
+  }, {
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      this._loadBalance();
+      this._startBalancePolling();
+    }
+  }, {
+    key: 'componentDidUnmount',
+    value: function componentDidUnmount() {
+      if (this.state.subscription) clearInterval(this.state.subscription);
+    }
+  }, {
+    key: 'fundWallet',
+    value: async function fundWallet() {
+      try {
+        await sendFundTransaction(this.metamask, this.metamask.eth.defaultAccount, this.address);
+        await delay(2000);
+        await this._loadBalance();
+      } catch (err) {
+        this.setState(_extends$2({}, this.state, {
+          error: 'Could not fund wallet: ' + err
+        }));
+      }
+    }
+  }, {
+    key: 'copyAddress',
+    value: function copyAddress() {
+      this.textArea.select();
+      document.execCommand('copy');
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var errorView = this.state.error || '';
+      if (!this.state.balance) {
+        var content = React.createElement(
+          'div',
+          null,
+          'Your wallet is empty! Fund it by clicking here:'
+        );
+      }
+      var contentStyle = { 'line-height': '2em' };
+      content = React.createElement(
+        'div',
+        { style: contentStyle, className: 'flex ba pa2' },
+        React.createElement(
+          'span',
+          { className: 'mr3' },
+          React.createElement(
+            'b',
+            null,
+            'Address:'
+          ),
+          ' ',
+          React.createElement(
+            'span',
+            { onClick: this.copyAddress },
+            this.address
+          )
+        ),
+        React.createElement(
+          'span',
+          { className: 'mr3' },
+          React.createElement(
+            'b',
+            null,
+            'Balance:'
+          ),
+          ' ',
+          this.metamask.fromWei(this.state.balance, 'ether'),
+          ' DEV'
+        )
+      );
+      return React.createElement(
+        'div',
+        { className: 'flex flex-column items-center' },
+        React.createElement(
+          'div',
+          { className: 'flex mw-50' },
+          content,
+          React.createElement(
+            'button',
+            { className: 'b ph3 pv2 input-reset ba b--black bg-transparent pointer f6',
+              onClick: this.fundWallet.bind(this) },
+            'Fund'
+          )
+        ),
+        React.createElement(
+          'div',
+          { className: 'dark-red mt2' },
+          errorView
+        )
+      );
+    }
+  }]);
+
+  return WalletManager;
+}(React.Component);
+
 exports.Loading = Loading;
 exports.GameWrapper = GameWrapper;
 exports.GameInfo = GameInfo;
 exports.Client = Client;
+exports.WalletManagerView = WalletManager;
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
